@@ -36,7 +36,7 @@
         if (fillWidth < 769) {
           return fillWidth - 56
         } else {
-          return (fillWidth-24-56)/4-1
+          return (fillWidth-24-56)/4-6
         }
       },
       imgList() {
