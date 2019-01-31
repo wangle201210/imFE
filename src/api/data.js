@@ -1,44 +1,29 @@
 import axios from '@/libs/api.request'
 
-export const getTableData = () => {
+export const recordList = () => {
   return axios.request({
-    url: 'get_table_data',
+    url: '/records',
     method: 'get'
   })
 }
 
-export const getDragList = () => {
+export const wayList = (data) => {
   return axios.request({
-    url: 'get_drag_list',
+    url: '/courses',
+    method: 'get',
+    params: data
+  })
+}
+
+export const historyList = () => {
+  return axios.request({
+    url: '/histories',
     method: 'get'
   })
 }
-
-export const errorReq = () => {
-  return axios.request({
-    url: 'error_url',
-    method: 'post'
-  })
-}
-
-export const saveErrorLogger = info => {
-  return axios.request({
-    url: 'save_error_logger',
-    data: info,
-    method: 'post'
-  })
-}
-
-export const uploadImg = formData => {
-  return axios.request({
-    url: 'image/upload',
-    data: formData
-  })
-}
-
-export const getOrgData = () => {
-  return axios.request({
-    url: 'get_org_data',
-    method: 'get'
-  })
-}
+// export const videoList = () => {
+//   return axios.request({
+//     url: '/videos',
+//     method: 'get'
+//   })
+// }

@@ -1,12 +1,12 @@
 <template>
   <div>
-    <gallery :images="images" :index="index" @close="index = null"></gallery>
+    <gallery :images="imgLists" :index="index" @close="index = null"></gallery>
     <div
       class="image"
-      v-for="(image, imageIndex) in images"
+      v-for="(image, imageIndex) in imgLists"
       :key="imageIndex"
       @click="index = imageIndex"
-      :style="imgList[imageIndex]"
+      :style="mineList[imageIndex]"
     ></div>
   </div>
 </template>
@@ -15,19 +15,15 @@
   import VueGallery from 'vue-gallery';
   
   export default {
+    props: {
+      imgLists:{
+        type: [Array, Object],
+      }
+    },
     data: function () {
       return {
-        images: [
-          'https://dummyimage.com/600x400/cccccc/000000',
-          'https://dummyimage.com/1500x1000/cccccc/000000',
-          'https://dummyimage.com/900x600/000000/ffffff',
-          'https://dummyimage.com/930x620/000000/ffffff',
-          'https://dummyimage.com/660x440/000000/cccccc',
-          'https://dummyimage.com/630x420/eeeeee/cccccc',
-          'https://dummyimage.com/600x400/ffffff/dddddd',
-          'https://dummyimage.com/600x400/666666/cccccc',
-        ],
         index: null,
+        mineList: [],
       };
     },
     computed: {
@@ -39,17 +35,32 @@
           return (fillWidth-24-56)/4-6
         }
       },
-      imgList() {
+    },
+    methods:{
+      getImgList(imgList){
         var img = []
-        for (var i=0;i<this.images.length;i++)
+        for (var i=0;i<imgList.length;i++)
         {
-          img[i]="background-image:url("+this.images[i]+");width:"+this.width+"px;height:"+this.width/3*2+"px"
+          img[i]="background-image:url("+imgList[i]+");width:"+this.width+"px;height:"+this.width/3*2+"px"
         }
         return img
       }
     },
+    mounted () {
+      var data = this.getImgList(this.imgLists)
+      this.mineList = data
+    },
     components: {
       'gallery': VueGallery
     },
+    watch: {
+      imgLists: {
+        handler(val){
+          var data = this.getImgList(val)
+          this.mineList = data
+        },
+        deep: true
+      }
+    }
   }
 </script> 

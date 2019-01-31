@@ -13,9 +13,10 @@ import { setToken, getToken,setPassword } from '@/libs/util'
 
 export default {
   state: {
-    userName: '',
+    name: '',
     userId: '',
     room: '',
+    role: '',
     avatorImgPath: '',
     token: getToken(),
     access: '',
@@ -33,8 +34,11 @@ export default {
     setUserId (state, id) {
       state.userId = id
     },
-    setUserName (state, name) {
-      state.userName = name
+    setName (state, name) {
+      state.name = name
+    },
+    setRole (state, name) {
+      state.role = name
     },
     setRoom (state, room) {
       state.room = room
@@ -74,20 +78,21 @@ export default {
   getters: {
     messageUnreadCount: state => state.messageUnreadList.length,
     messageReadedCount: state => state.messageReadedList.length,
-    messageTrashCount: state => state.messageTrashList.length
+    messageTrashCount: state => state.messageTrashList.length,
+    token: state => state.token,
   },
   actions: {
     // 登录
-    handleLogin ({ commit }, {userName, password, room}) {
-      userName = userName.trim()
+    handleLogin ({ commit }, {name, password, room}) {
+      name = name.trim()
       return new Promise((resolve, reject) => {
         login({
-          userName,
+          name,
           password,
           room
         }).then(res => {
           const data = res.data
-          commit('setToken', data.token)
+          commit('setToken', data.data.token)
           commit('setRoom', room)
           resolve()
         }).catch(err => {
@@ -99,6 +104,7 @@ export default {
     handleLogOut ({ state, commit }) {
       return new Promise((resolve, reject) => {
         logout(state.token).then(() => {
+          console.log("----------")
           commit('setToken', '')
           commit('setAccess', [])
           resolve()
@@ -116,12 +122,15 @@ export default {
       return new Promise((resolve, reject) => {
         try {
           getUserInfo(state.token).then(res => {
-            const data = res.data
-            commit('setAvator', data.avator)
-            commit('setUserName', data.name)
-            commit('setUserId', data.user_id)
-            commit('setAccess', data.access)
+            const data = res.data.data
+            // console.log("data")
+            // console.log(data)
+            // commit('setAvator', data.avator)
+            commit('setName', data.name)
+            // commit('setUserId', data.user_id)
+            // commit('setAccess', data.access)
             commit('setHasGetInfo', true)
+            commit('setRole', data.role)
             resolve(data)
           }).catch(err => {
             reject(err)

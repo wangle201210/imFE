@@ -2,6 +2,7 @@
       <div class="item">
         <div class="player">
           <video-player  
+            v-if="videoShow"
             class="vjs-custom-skin"
             ref="videoPlayer"
             :options="playerOptions"
@@ -32,8 +33,12 @@
     components: {
       videoPlayer
     },
+    props: {
+      videoUrl: "",
+    },
     data() {
       return {
+        videoShow: false,
         width: document.documentElement.clientWidth,
         // videojs options
         playerOptions: {
@@ -46,7 +51,7 @@
             // type: "video/mp4",
             // mp4
             // src: "http://localhost:8081/videos/sp.mp4",
-            src: "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
+            src: this.videoUrl,
             // webm
             // src: "https://cdn.theguardian.tv/webM/2015/07/20/150716YesMen_synd_768k_vp8.webm"
           }],
@@ -55,10 +60,30 @@
       }
     },
     mounted() {
-        this.player.muted(false)
+      if (this.videoUrl == "") {
+        this.videoShow = false
+      }else{
+        this.videoShow = true
+      }
+        // this.player.muted(true)
+        this.playerOptions.sources[0].src = this.videoUrl
+          console.log("this.videoUrl1")
+          console.log(this.videoUrl)
+
         if (this.width < 769) {
-          this.playerOptions.height = 360
+          this.playerOptions.height = 260
         }
+    },
+    watch: {
+      videoUrl: {
+        handler(){
+          console.log("this.videoUrl2")
+          console.log(this.videoUrl)
+          this.playerOptions.sources[0].src = this.videoUrl
+          console.log(this.playerOptions.sources)
+
+        }
+      }
     },
     computed: {
       player() {

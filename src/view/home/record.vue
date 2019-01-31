@@ -1,14 +1,18 @@
 <template>
     <div class="way">
       <Drawer :closable="false" class="way-drawer" :width="wayWidth" v-model="show">
-          <div class="demo-drawer-profile" v-html="content">
-              
-          </div>
+        <div v-for="item in initData" class="record">
+          <li class="m-5"><a @click="detail(item)">{{item.title}}</a></li>
+        </div>
+      </Drawer>
+      <Drawer :closable="false" v-model="detailShow" :width="wayWidth">
+        <div v-html="content"></div>
       </Drawer>
     </div>
 </template>
 
 <script>
+import { recordList } from '@/api/data'
   export default {
     props: {
       initData: {
@@ -21,10 +25,12 @@
       return {
         show: false,
         width: document.documentElement.clientWidth,
-        content: ''
+        content: '',
+        detailShow: false,
       }
     },
     mounted() {
+      // this.init()
     },
     computed: {
       wayWidth: function () {
@@ -36,11 +42,18 @@
       }
     },
     methods: {
+      detail(res) {
+        this.detailShow = true
+        this.content = res.content
+      },
+      init() {
+        
+      }
     },
     watch: {
       initData: {
         handler() {
-          this.content = this.initData.content
+
         },
         deep: true
       }
@@ -53,6 +66,9 @@
   }
   .demo-drawer-profile .ivu-col{
       margin-bottom: 12px;
+  }
+  .record{
+    font-size: 15px;
   }
 </style>
 

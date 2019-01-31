@@ -90,13 +90,13 @@ export default {
   actions: {
     addErrorLog ({ commit, rootState }, info) {
       if (!window.location.href.includes('error_logger_page')) commit('setHasReadErrorLoggerStatus', false)
-      const { user: { token, userId, userName } } = rootState
+      const { user: { token, userId, uname } } = rootState
       let data = {
         ...info,
         time: Date.parse(new Date()),
         token,
         userId,
-        userName
+        uname
       }
       saveErrorLogger(info).then(() => {
         commit('addError', data)
