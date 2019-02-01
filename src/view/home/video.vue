@@ -34,7 +34,7 @@
       videoPlayer
     },
     props: {
-      videoUrl: "",
+      initData: "",
     },
     data() {
       return {
@@ -51,7 +51,7 @@
             // type: "video/mp4",
             // mp4
             // src: "http://localhost:8081/videos/sp.mp4",
-            src: this.videoUrl,
+            src: this.initData,
             // webm
             // src: "https://cdn.theguardian.tv/webM/2015/07/20/150716YesMen_synd_768k_vp8.webm"
           }],
@@ -60,26 +60,26 @@
       }
     },
     mounted() {
-      if (this.videoUrl == "") {
+      if (this.initData == "") {
         this.videoShow = false
       }else{
         this.videoShow = true
       }
         // this.player.muted(true)
-        this.playerOptions.sources[0].src = this.videoUrl
-          console.log("this.videoUrl1")
-          console.log(this.videoUrl)
+        this.playerOptions.sources[0].src = this.initData
+          console.log("this.initData1")
+          console.log(this.initData)
 
         if (this.width < 769) {
           this.playerOptions.height = 260
         }
     },
     watch: {
-      videoUrl: {
+      initData: {
         handler(){
-          console.log("this.videoUrl2")
-          console.log(this.videoUrl)
-          this.playerOptions.sources[0].src = this.videoUrl
+          console.log("this.initData2")
+          console.log(this.initData)
+          this.playerOptions.sources[0].src = this.initData
           console.log(this.playerOptions.sources)
 
         }

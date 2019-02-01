@@ -10,6 +10,7 @@ import {
   getUnreadCount
 } from '@/api/user'
 import { setToken, getToken,setPassword } from '@/libs/util'
+import { Message } from 'iview';
 
 export default {
   state: {
@@ -91,6 +92,11 @@ export default {
           password,
           room
         }).then(res => {
+          console.log("res.data")
+          console.log(res.data)
+          if (res.data.code != 200) {
+            Message.warning(res.data.msg);
+          }
           const data = res.data
           commit('setToken', data.data.token)
           commit('setRoom', room)

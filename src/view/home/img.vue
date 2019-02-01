@@ -1,9 +1,9 @@
 <template>
   <div>
-    <gallery :images="imgLists" :index="index" @close="index = null"></gallery>
+    <gallery :images="initData" :index="index" @close="index = null"></gallery>
     <div
       class="image"
-      v-for="(image, imageIndex) in imgLists"
+      v-for="(image, imageIndex) in initData"
       :key="imageIndex"
       @click="index = imageIndex"
       :style="mineList[imageIndex]"
@@ -16,7 +16,7 @@
   
   export default {
     props: {
-      imgLists:{
+      initData:{
         type: [Array, Object],
       }
     },
@@ -47,14 +47,14 @@
       }
     },
     mounted () {
-      var data = this.getImgList(this.imgLists)
+      var data = this.getImgList(this.initData)
       this.mineList = data
     },
     components: {
       'gallery': VueGallery
     },
     watch: {
-      imgLists: {
+      initData: {
         handler(val){
           var data = this.getImgList(val)
           this.mineList = data

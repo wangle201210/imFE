@@ -1,10 +1,10 @@
 <template>
     <div class="way">
-      <Drawer :closable="false" class="way-drawer" :width="wayWidth" v-model="show">
+      <!-- <Drawer :closable="false" class="way-drawer" :width="wayWidth" v-model="show"> -->
         <div v-for="item in initData" class="record">
           <li class="m-5"><a @click="detail(item)">{{item.title}}</a></li>
         </div>
-      </Drawer>
+      <!-- </Drawer> -->
       <Drawer :closable="false" v-model="detailShow" :width="wayWidth">
         <div v-html="content"></div>
       </Drawer>
@@ -53,7 +53,6 @@ import { recordList } from '@/api/data'
     watch: {
       initData: {
         handler() {
-
         },
         deep: true
       }

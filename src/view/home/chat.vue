@@ -1,40 +1,52 @@
 <template>
   <div style="min-height: 100px">
     <div v-if="joined">
-    <Input type="textarea" :autosize="{minRows: 2,maxRows: 5}" v-model="content" name="content" placeholder="请输入聊天内容..." onkeydown="if(event.keyCode==13)return false;" class="m-tb-5"></Input>
-    <i-button size="small" class="f-r m-5" ghost type="warning" @click="logout">退出</i-button>
-    <i-button size="small" class="f-r m-5" type="success" ghost @click="showWayFun()" >教学</i-button>
-    <i-button size="small" class="f-r m-5" type="success" ghost @click="showHistoryFun()" >历史</i-button>
-    <i-button size="small" class="f-r m-5" type="success" ghost @click="showRecordFun()" >记录</i-button>
-    <i-button size="small" class="f-r m-5" type="primary" @click="websocketsend(content)" >发送</i-button>
-    <!-- <Input @change="uploadPhoto($event)" type="file" ></Input> -->
-
-    <Upload 
-      :before-upload="handleBeforeUpload"
-      :on-exceeded-size="handleMaxSize"
-      :max-size="2048"
-      :show-upload-list="false"
-      action="//jsonplaceholder.typicode.com/posts/">
-        <Button size="small" icon="ios-camera" class="m-5"></Button>
-    </Upload>
-    <div class="chat-record">
-      <Card v-for="item in contentList" class="m-tb-5">
-        <div v-if="item.Type == 0 && role == 'admin' && item.User != user">
-          <div><b class="p-r-5">{{item.User}}</b> <i>{{formatDate(item.Timestamp,"hh:mm:ss")}}</i></div>
-          <div>正在申请进入房间</div>
-          <Button class="m-5" type="success" @click="acc(item.User)">允许</Button>
-          <Button class="m-5" type="warning" @click="den(item.User)">下线</Button>
+      <div v-if="reloadChat" :style="maxHeight" class="chat-record">
+        <Card v-for="item in contentList" class="m-tb-5">
+          <div v-if="item.Type == 0 && role == 'admin' && item.User != user" class="chat-one">
+            <p class="chat-name"><b class="p-r-5">{{item.User}}</b></p> 
+            <p class="chat-content">正在申请进入房间</p>
+            <Button class="m-5" type="success" @click="acc(item.User)">允许</Button>
+            <Button class="m-5" type="warning" @click="den(item.User)">下线</Button>
+            <p class="chat-time"><i>{{formatDate(item.Timestamp,"hh:mm")}}</i></p>
+          </div>
+          <div v-else-if="isPic(item.Content)" class="chat-one">
+            <p class="chat-name" v-if="item.User"><b class="p-r-5">{{item.User}}</b></p>
+            <p class="chat-content"><img :src="item.Content" alt="" style="max-width: 80%"></p>
+            <p class="chat-time"><i>{{formatDate(item.Timestamp,"hh:mm")}}</i></p>
+          </div>
+          <div v-else>
+            <div v-if="item.User" class="chat-one">
+              <p class="chat-name"><b class="p-r-5">{{item.User}}: </b></p>
+              <p class="chat-content"> <span>{{item.Content}}</span></p> 
+              <p class="chat-time"><i>{{formatDate(item.Timestamp,"hh:mm")}}</i></p>
+            </div>
+            <div></div>
+          </div>
+        </Card>
+      </div>
+      <div :style="menu" class="chat-menu">
+        <i-button class="menu-display m-5" type="success" ghost @click="showWayFun()" >教学</i-button>
+        <i-button class="menu-display m-5" type="success" ghost @click="showHistoryFun()" >历史</i-button>
+        <i-button class="menu-display m-5" type="success" ghost @click="showRecordFun()" >记录</i-button>
+        <i-button class="menu-display m-5" type="success" ghost @click="showVideoFun()" >视屏</i-button>
+        <i-button class="menu-display m-5" ghost type="warning" @click="logout">退出</i-button>
+      </div>
+      <div class="input-area">
+        <Input :style="conWidth" ref="inputText" type="textarea" :autosize="{minRows: 1,maxRows: 3}" v-model="content" name="content" placeholder="请输入聊天内容..." @keyup.13.native="websocketsend(content)" class="m-tb-5"></Input>
+        <div class="send">
+          <i-button class="f-r m-5" @click="websocketsend(content)" >发送</i-button>
         </div>
-        <div v-else-if="isPic(item.Content)">
-          <div v-if="item.User"><b class="p-r-5">{{item.User}}</b> <i>{{formatDate(item.Timestamp,"hh:mm:ss")}}</i></div>
-          <div><img :src="item.Content" alt="" style="max-width: 80%"></div>
-        </div>
-        <div v-else>
-          <div v-if="item.User"><b class="p-r-5">{{item.User}}</b> <i>{{formatDate(item.Timestamp,"hh:mm:ss")}}</i></div>
-          <div>{{item.Content}}</div>
-        </div>
-      </Card>
-    </div>
+        <Upload 
+          class="upload-img"
+          :before-upload="handleBeforeUpload"
+          :on-exceeded-size="handleMaxSize"
+          :max-size="size"
+          :show-upload-list="false"
+          action="/">
+            <Button icon="ios-camera" class="m-5"></Button>
+        </Upload>
+      </div>
       <way :initData="getData" ref="way"></way>
       <record :initData="getData" ref="record"></record>
       <history :initData="getData" ref="history"></history>
@@ -65,19 +77,42 @@
       return {
         websock: null,
         content: '',
+        videoShow: false,
         contentList: [],
         showWay:false,
         joined: false,
-        getData:{}
+        getData:{},
+        reloadChat: true,
+        fullHeight: document.documentElement.clientHeight,
+        width: document.documentElement.clientWidth,
+        size: 2048,
       }
     },
     mounted () {
       if (getToken()) {
         this.initWebSocket()
       }
-      window.addEventlistener('beforeunload',setToken(""))
+      window.addEventListener('beforeunload', function () {
+          setToken("")
+      });
     },
     computed: {
+      maxHeight: function () {
+        return {
+          'height': (this.fullHeight - 115) + 'px',
+          "width": (this.width - 90) + 'px',
+        }
+      },
+      menu: function() {
+        return {
+          "top": (this.fullHeight - 400) + 'px',
+        }
+      },
+      conWidth: function () {
+        return {
+          "width": (this.width - 140) + 'px',
+        }
+      }
     },
     methods: {
       isPic(res){
@@ -87,10 +122,10 @@
         return false
       },
       handleMaxSize (file) {
-        this.$Message.warning('图片最大可上传2M!');
+        this.$Message.warning('图片最大可上传'+this.size/1024+'M!');
       },
       handleBeforeUpload(file) {
-        if (file.size <= 2*1024*1024) {
+        if (file.size <= (this.size*1024)) {
           let reader = new FileReader()
           reader.readAsDataURL(file)
           const that = this
@@ -105,6 +140,7 @@
         data.Type = "login"
         data.User = u
         data.Join = true
+        this.$Message.success('你同意了'+u+'的登陆请求');
         this.websock.send(JSON.stringify(data))
       },
       den(u) {
@@ -130,6 +166,23 @@
           this.getData = res.data.data
           this.$refs.record.show = true
         })
+      },
+      showVideoFun(){
+        var reduce = 0
+        if (this.width < 769) {
+          reduce = 270
+        } else {
+          reduce = 510
+        }
+        this.reloadChat = !this.reloadChat
+        this.videoShow = !this.videoShow
+        if (this.videoShow) {
+          this.fullHeight -= reduce
+        } else {
+          this.fullHeight += reduce
+        }
+        this.reloadChat = !this.reloadChat
+        this.$emit("showVideo",this.videoShow)
       },
       showHistoryFun() {
         historyList().then((res) => {
@@ -189,7 +242,12 @@
           data.User = ''
         }else if (data.Type == 2) {//一般的聊天信息
 
-        } else if (data.Type == 3 && data.User == this.user) {//自己的账号别人再次登陆不用提示
+        } else if (data.Type == 3 && data.User == this.user) {//错误,包括重复登陆和管理员多人
+          this.$Message.warning(data.Content+',即将自动退出!');
+          setTimeout(() => {
+            this.$emit("logout")
+          }, 1000);
+          // this.websock.close()
           return 
         } else if (data.Type == 4 || data.Type == 5) {//照片
           this.$emit("addImg",{url:data.Content,type: data.Type})
@@ -205,8 +263,10 @@
           this.websock.send(agentData)
           this.content = ''
         }
+        this.$refs.inputText.blur()
       }, 
       websocketclose(e){ //关闭 
+        this.$Message.warning("你已被被强制下线!");
         this.$emit("logout")
       },
       formatDate (date, fmt) {
@@ -238,6 +298,7 @@
     },
     created(){
       if (this.role == "admin") {
+        this.size = 204800
         this.joined = true
       }
     },
@@ -259,4 +320,3 @@
     }
   }
 </script>
-

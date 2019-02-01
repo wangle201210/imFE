@@ -1,10 +1,10 @@
 <template>
     <div class="way">
-      <Drawer :closable="false" class="way-drawer" :width="wayWidth" v-model="show">
+      <!-- <Drawer :closable="false" class="way-drawer" :width="wayWidth" v-model="show"> -->
           <div class="demo-drawer-profile" v-html="content">
               
           </div>
-      </Drawer>
+      <!-- </Drawer> -->
     </div>
 </template>
 
