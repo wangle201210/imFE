@@ -19,7 +19,7 @@
           </div>
           <div v-else-if="isPic(item.Content)" class="chat-one">
             <p class="chat-name" v-if="item.User"><b class="p-r-5">{{item.User}}</b></p>
-            <p class="chat-content"><img :src="item.Content" alt="" style="max-width: 80%"></p>
+            <p class="chat-content"><img :src="item.Content" alt="" style="max-width: 50%"></p>
             <!-- <p class="chat-time"><i>{{formatDate(item.Timestamp,"hh:mm")}}</i></p> -->
           </div>
           <div v-else>
