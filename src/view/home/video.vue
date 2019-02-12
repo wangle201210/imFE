@@ -77,10 +77,11 @@
     watch: {
       initData: {
         handler(){
-          console.log("this.initData2")
-          console.log(this.initData)
+          this.videoShow = false
           this.playerOptions.sources[0].src = this.initData
-          console.log(this.playerOptions.sources)
+          setTimeout(() => {
+            this.videoShow = true
+          }, 1000);
 
         }
       }

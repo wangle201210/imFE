@@ -1,9 +1,10 @@
 import axios from '@/libs/api.request'
 
-export const recordList = () => {
+export const recordList = (data) => {
   return axios.request({
     url: '/records',
-    method: 'get'
+    method: 'get',
+    params: data
   })
 }
 
@@ -15,10 +16,11 @@ export const wayList = (data) => {
   })
 }
 
-export const historyList = () => {
+export const historyList = (data) => {
   return axios.request({
     url: '/histories',
-    method: 'get'
+    method: 'get',
+    params: data
   })
 }
 // export const videoList = () => {

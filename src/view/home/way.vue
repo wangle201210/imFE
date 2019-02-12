@@ -40,7 +40,7 @@
     watch: {
       initData: {
         handler() {
-          this.content = this.initData.content
+          this.content = this.initData[0].content
         },
         deep: true
       }

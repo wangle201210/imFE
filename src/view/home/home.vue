@@ -13,7 +13,7 @@
           <div v-if="item.Type == 0 && role == 'admin' && item.User != user" class="chat-one">
             <p class="chat-name"><b class="p-r-5">{{item.User}}</b></p> 
             <p class="chat-content">正在申请进入房间</p>
-            <Button class="m-5" type="success" @click="acc(item.User)">允许</Button>
+            <Button style="margin-left: 150px" class="m-5" type="success" @click="acc(item.User)">允许</Button>
             <Button class="m-5" type="warning" @click="den(item.User)">下线</Button>
             <!-- <p class="chat-time"><i>{{formatDate(item.Timestamp,"hh:mm")}}</i></p> -->
           </div>
@@ -69,13 +69,13 @@
         <Icon style="padding: 0 5px" @click="websocketsend(content)" slot="append" size="25" type="md-send" />
       </Input>
     </div>
-    <div class="infos">
+    <div class="infos" v-if="showElse">
       <Drawer 
         class="info-content"
         :mask="false"
         placement="left"
         v-model="value1">
-        <component v-if="showElse" :is="currentShow" :ref="currentShow" :initData="getData"></component>
+        <component :is="currentShow" :ref="currentShow" :initData="getData"></component>
       </Drawer>
     </div>
   </div>
@@ -190,6 +190,7 @@ export default {
     ]),
     showFunc(name) {
       this.value1 = true
+      this.showElse = false
       this.showElse = true
       this.currentShow = name
       let parp = {}
@@ -326,9 +327,6 @@ export default {
       this.videoShow = res
     },
     changeVideo(res) {
-      console.log("zaibian")
-        console.log(res)
-
         this.videoUrl = res
     },
     initWebSocket(){ //初始化weosocket 
@@ -392,9 +390,11 @@ export default {
           return 
         } else if (data.Type == 4 || data.Type == 5) {//照片
           this.addImg({url:data.Content,type: data.Type})
+          this.showFunc(this.currentShow)
           return //照片
         } else if (data.Type == 6) {
           this.videoUrl = data.Content
+          this.showFunc(this.currentShow)
           return
         }
         if (data.Timestamp - this.lastTime > 60 * 1000) {
