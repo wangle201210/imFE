@@ -13,7 +13,7 @@
           <div v-if="item.Type == 0 && role == 'admin' && item.User != user" class="chat-one">
             <p class="chat-name"><b class="p-r-5">{{item.User}}</b></p> 
             <p class="chat-content">正在申请进入房间</p>
-            <Button style="margin-left: 150px" class="m-5" type="success" @click="acc(item.User)">允许</Button>
+            <Button style="margin-left: 30%" class="m-5" type="success" @click="acc(item.User)">允许</Button>
             <Button class="m-5" type="warning" @click="den(item.User)">下线</Button>
             <!-- <p class="chat-time"><i>{{formatDate(item.Timestamp,"hh:mm")}}</i></p> -->
           </div>
@@ -79,6 +79,7 @@
       </Drawer>
     </div>
   </div>
+  <div v-else>管理员正在审核登陆情况,请稍等!</div>
 </template>
 
 <script>
@@ -120,26 +121,6 @@ export default {
       getData:{},
       reloadChat: true,
       contentList:[
-        // {User:"wangle",Content:"我的内容",Timestamp:1549011007},
-        // {User:"wangle",Content:"我的内容",Timestamp:1549011007},
-        // {User:"wangle",Content:"我的内容",Timestamp:1549011007},
-        // {User:"wangle",Content:"我的内容",Timestamp:1549011007},
-        // {User:"wangle",Content:"我的内容",Timestamp:1549011007},
-        // {User:"wangle",Content:"我的内容",Timestamp:1549011007},
-        // {User:"wangle",Content:"我的内容",Timestamp:1549011007},
-        // {User:"wangle",Content:"我的内容",Timestamp:1549011007},
-        // {User:"wangle",Content:"我的内容",Timestamp:1549011007},
-        // {User:"wangle",Content:"我的内容",Timestamp:1549011007},
-        // {User:"wangle",Content:"我的内容",Timestamp:1549011007},
-        // {User:"wangle",Content:"我的内容",Timestamp:1549011007},
-        // {User:"wangle",Content:"我的内容",Timestamp:1549011007},
-        // {User:"wangle",Content:"我的内容",Timestamp:1549011007},
-        // {User:"wangle",Content:"我的内容",Timestamp:1549011007},
-        // {User:"wangle",Content:"我的内容",Timestamp:1549011007},
-        // {User:"wangle",Content:"我的内容",Timestamp:1549011007},
-        // {User:"wangle",Content:"我的内容",Timestamp:1549011007},
-        // {User:"wangle",Content:"我的内容",Timestamp:1549011007},
-        // {User:"wangle",Content:"我的内容我的内容我的内容我的内容我的内容我的内容我的内容我的内容我的内容我的内容我的内容我的内容我的内容",Timestamp:1549011007},
       ],
       quickList:[
         {Content:"在的呢,亲"},
@@ -188,8 +169,8 @@ export default {
     ...mapActions([
       'handleLogOut'
     ]),
-    showFunc(name) {
-      this.value1 = true
+    showFunc(name,up = false) {
+      this.value1 = this.value1 || !up
       this.showElse = false
       this.showElse = true
       this.currentShow = name
@@ -390,11 +371,11 @@ export default {
           return 
         } else if (data.Type == 4 || data.Type == 5) {//照片
           this.addImg({url:data.Content,type: data.Type})
-          this.showFunc(this.currentShow)
+          this.showFunc(this.currentShow,true)
           return //照片
         } else if (data.Type == 6) {
           this.videoUrl = data.Content
-          this.showFunc(this.currentShow)
+          this.showFunc(this.currentShow,true)
           return
         }
         if (data.Timestamp - this.lastTime > 60 * 1000) {
