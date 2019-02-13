@@ -63,10 +63,10 @@
           :max-size="size"
           :show-upload-list="false"
           action="/">
-            <Button icon="ios-camera" style="padding: 0 5px"></Button>
+            <Button icon="ios-camera" style="padding: 2px 5px"></Button>
         </Upload>
         <!-- <Icon style="padding: 0 5px" slot="prepend"  type="md-photos" /> -->
-        <Icon style="padding: 0 5px" @click="websocketsend(content)" slot="append" size="25" type="md-send" />
+        <Icon style="padding: 2px 5px" @click="websocketsend(content)" slot="append" size="25" type="md-send" />
       </Input>
     </div>
     <div class="infos" v-if="showElse">
@@ -142,7 +142,7 @@ export default {
     maxHeight: function () {
       return {
         'height': (this.fullHeight - 50) + 'px',
-        "width": (this.width - 60) + 'px',
+        "width": (this.width - 85) + 'px',
       }
     },
     menu: function() {
@@ -152,7 +152,7 @@ export default {
     },
     conWidth: function () {
       return {
-        "width": (this.width - 100) + 'px',
+        "width": (this.width - 125) + 'px',
       }
     }
     },
@@ -170,6 +170,11 @@ export default {
       'handleLogOut'
     ]),
     showFunc(name,up = false) {
+      if (name == this.currentShow) {
+        this.showElse = false
+        this.currentShow = ""
+        return
+      }
       this.value1 = this.value1 || !up
       this.showElse = false
       this.showElse = true
