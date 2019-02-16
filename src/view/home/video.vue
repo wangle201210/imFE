@@ -67,11 +67,10 @@
       }
         // this.player.muted(true)
         this.playerOptions.sources[0].src = this.initData
-          console.log("this.initData1")
-          console.log(this.initData)
-
-        if (this.width < 769) {
+        if (this.width < 769 && this.width > 320) {
           this.playerOptions.height = 260
+        } else if (this.width < 321) { //iphone 5/se
+          this.playerOptions.height = 230
         }
     },
     watch: {
@@ -134,4 +133,3 @@
     }
   }
 </script>
-

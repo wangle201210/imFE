@@ -18,7 +18,7 @@
             <!-- <p class="chat-time"><i>{{formatDate(item.Timestamp,"hh:mm")}}</i></p> -->
           </div>
           <div v-else-if="isPic(item.Content)" class="chat-one">
-            <p class="chat-name" v-if="item.User"><b class="p-r-5">{{item.User}}</b></p>
+            <p class="chat-name" v-if="item.User"><b class="p-r-5">{{item.User}}:</b></p>
             <p class="chat-content"><img :src="item.Content" alt="" style="max-width: 50%"></p>
             <!-- <p class="chat-time"><i>{{formatDate(item.Timestamp,"hh:mm")}}</i></p> -->
           </div>
@@ -147,7 +147,7 @@ export default {
     },
     menu: function() {
       return {
-        "top": (this.fullHeight - 400) + 'px',
+        // "top": (this.fullHeight - 400) + 'px',
       }
     },
     conWidth: function () {
@@ -159,6 +159,9 @@ export default {
   mounted () {
     if (getToken()) {
         this.initWebSocket()
+        setTimeout(() => {
+          this.showFunc('videos')
+        }, 1000);
       }
       window.addEventListener('beforeunload', function () {
           setToken("")

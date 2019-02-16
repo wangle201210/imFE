@@ -59,13 +59,7 @@
     border: 1px solid #ebebeb;
     margin: 5px;
 }
-@media screen and (max-width: 768px) and (min-width:481px) {
-    .way {
-        .way-drawer{
-            width: 100%;
-        }
-    }
-}
+
 .chat-name{
     vertical-align: top;
     // width: 75px;
@@ -103,13 +97,14 @@
 /*new add*/
 .menu {
     position:fixed;
-    bottom:100px;
+    bottom: 60px;
     right: 5px;
     width: 60px;
     .m-5 {
         margin: 3px;
     }
 }
+
 .chat-bottom {
     width: 100%;
     position:fixed;
@@ -151,7 +146,7 @@
 }
 .info-content {
     .ivu-drawer {
-        height: 300px;
+        height: 530px;
         width: 100% !important;
     }
 }
@@ -180,7 +175,32 @@
     border-radius: 6px;
     display: inline-block;
     background-size:cover;
-    background-image:url("http://localhost:8081/im/pic/tx.png");
+    // background-image:url("http://localhost:8081/im/pic/tx.png");
 }
 
-
+@media screen and (max-width: 768px) and (min-width:481px) {
+    .way {
+        .way-drawer{
+            width: 100%;
+        }
+    }
+    .menu {
+        bottom:100px;
+    }
+    .info-content {
+        .ivu-drawer {
+            height: 300px;
+        }
+    }
+}
+//兼容iphone5 se 等太小的屏幕
+@media screen and (max-width: 321px) {
+    .menu {
+        bottom:60px;
+    }
+    .info-content {
+        .ivu-drawer {
+            height: 270px;
+        }
+    }
+}
