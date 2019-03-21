@@ -91,7 +91,7 @@ import way from "./way"
 import record from "./record"
 import history from "./history"
 import { setToken,getToken } from '@/libs/util'
-import { recordList,historyList,wayList,videoList } from '@/api/data'
+import { recordList,historyList,wayList,videoList,imgList } from '@/api/data'
 export default {
 
   data() {
@@ -197,9 +197,15 @@ export default {
           this.getData = res.data.data
         })
       } else if (name == "videos") {
+        // videoList(parp).then((res) => {
+        //   this.getData = res.data.data
+        // })
         this.getData = this.videoUrl
       } else if (name == "imgs") {
-        this.getData = this.imgLists
+        imgList(parp).then((res) => {
+          this.getData = res.data.data
+        })
+        // this.getData = this.imgLists
       }
       
     },
@@ -294,9 +300,9 @@ export default {
       return ('00' + str).substr(str.length)
     },
     logout () {
-      // if (this.$refs.chat && this.$refs.chat.websock) {
-      //   this.$refs.chat.websock.close()
-      // }
+      if (this.$refs.chat && this.$refs.chat.websock) {
+        this.$refs.chat.websock.close()
+      }
       this.handleLogOut().then(() => {
         this.$router.push({
           name: 'login'
@@ -321,8 +327,8 @@ export default {
     initWebSocket(){ //初始化weosocket 
         // var uri = 'ws://ws.iwangle.me/ws/join?uname='+this.user+'&password=password'+'&room='+this.room;//ws地址
         // var uri = 'ws://localhost:8081/ws/join?uname='+this.user+'&password=password'+'&room='+this.room;//ws地址
-        // var uri = 'ws://localhost:8081/api/ws/join?token='+getToken()+'&room='+this.room;//ws地址
-        var uri = 'ws://ws.iwangle.me/api/ws/join?token='+getToken()+'&room='+this.room;//ws地址
+        var uri = 'ws://localhost:8081/api/ws/join?token='+getToken()+'&room='+this.room;//ws地址
+        // var uri = 'ws://ws.iwangle.me/api/ws/join?token='+getToken()+'&room='+this.room;//ws地址
         var wsuri = encodeURI(encodeURI(uri))
         this.websock = new WebSocket(wsuri); 
         this.websock.onopen = this.websocketonopen

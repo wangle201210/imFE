@@ -48,7 +48,7 @@
           language: 'zh',
           playbackRates: [0.7, 1.0, 1.5, 2.0],
           sources: [{
-            // type: "video/mp4",
+            type: "video/mp4",
             // mp4
             // src: "http://localhost:8081/videos/sp.mp4",
             src: this.initData,
@@ -66,6 +66,9 @@
         this.videoShow = true
       }
         // this.player.muted(true)
+        if (this.initData.substr(this.initData.length -4) == "m3u8") {
+          this.playerOptions.sources[0].type = "application/x-mpegURL"
+        }
         this.playerOptions.sources[0].src = this.initData
         if (this.width < 769 && this.width > 320) {
           this.playerOptions.height = 260
@@ -77,6 +80,9 @@
       initData: {
         handler(){
           this.videoShow = false
+          if (this.initData.substr(this.initData.length -4) == "m3u8") {
+            this.playerOptions.sources[0].type = "application/x-mpegURL"
+          }
           this.playerOptions.sources[0].src = this.initData
           setTimeout(() => {
             this.videoShow = true

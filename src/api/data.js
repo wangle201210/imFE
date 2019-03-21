@@ -23,9 +23,19 @@ export const historyList = (data) => {
     params: data
   })
 }
-// export const videoList = () => {
-//   return axios.request({
-//     url: '/videos',
-//     method: 'get'
-//   })
-// }
+
+export const videoList = (data) => {
+  return axios.request({
+    url: '/videos',
+    method: 'get',
+    params: data
+  })
+}
+
+export const imgList = (data) => {
+  return axios.request({
+    url: '/pics',
+    method: 'get',
+    params: data
+  })
+}
